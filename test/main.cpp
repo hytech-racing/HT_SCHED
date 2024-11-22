@@ -34,20 +34,22 @@ bool task3F(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo)
     return true;
 }
 
-HT_SCHED::Scheduler scheduler = HT_SCHED::Scheduler(stdMicros);
+HT_SCHED::Scheduler& scheduler = HT_SCHED::Scheduler::getInstance();
 
-HT_TASK::Task task1 = HT_TASK::Task(HT_TASK::DUMMY_FUNCTION, task1F, 20000UL, 2); // 20000us is 50hz
-HT_TASK::Task task2 = HT_TASK::Task(HT_TASK::DUMMY_FUNCTION, task2F, 20000UL, 1); // task2 is higher priority
+HT_TASK::Task task1 = HT_TASK::Task(HT_TASK::DUMMY_FUNCTION, task1F, 2, 20000UL); // 20000us is 50hz
+HT_TASK::Task task2 = HT_TASK::Task(HT_TASK::DUMMY_FUNCTION, task2F, 1, 20000UL); // task2 is higher priority
 HT_TASK::Task task3 = HT_TASK::Task(HT_TASK::DUMMY_FUNCTION, task3F, 0); // task3 is an idle task
 
 HT_TASK::Task schedMon = HT_TASK::Task(
     std::bind(&HT_SCHED::Scheduler::initSchedMon, std::ref(scheduler), std::placeholders::_1, std::placeholders::_2), 
     std::bind(&HT_SCHED::Scheduler::schedMon, std::ref(scheduler), std::placeholders::_1, std::placeholders::_2), 
-    20000UL
+    100000UL,
+    0
 );
 
 int main(void)
 {
+    scheduler.setTimingFunction(stdMicros);
     scheduler.schedule(task1);
     scheduler.schedule(task2);
     scheduler.schedule(task3);

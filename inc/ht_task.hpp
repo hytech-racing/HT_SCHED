@@ -58,8 +58,8 @@ namespace HT_TASK
         Task(
             std::function<bool(const unsigned long&, const TaskInfo&)> setup,
             std::function<bool(const unsigned long&, const TaskInfo&)> loop,
-            unsigned long executionIntervalMicros,
-            int priority
+            int priority,
+            unsigned long executionIntervalMicros
         ) :
         _taskInfo(TaskInfo()),
         _setup(setup),

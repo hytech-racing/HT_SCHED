@@ -12,8 +12,15 @@ namespace HT_SCHED
     class Scheduler
     {
         public:
-        Scheduler(std::function<unsigned long()>);
 
+        // Singleton patterning
+        static Scheduler& getInstance()
+        {
+            static Scheduler instance;
+            return instance;
+        }
+
+        void setTimingFunction(std::function<unsigned long()>);
         bool schedule(HT_TASK::Task& task);
         void run();
 
@@ -27,6 +34,8 @@ namespace HT_SCHED
         
         private:
         
+        Scheduler();
+
         HT_TASK::Task*                  _taskQueue[HT_SCHED_MAX_TASKS]; // ordered list of task object pointers
         int                             _numTasks;
         std::function<unsigned long()>  _microsFunction;

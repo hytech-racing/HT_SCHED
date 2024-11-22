@@ -3,12 +3,16 @@
 
 namespace HT_SCHED
 {
-    // Constructor & initializer
-    Scheduler::Scheduler(std::function<unsigned long()> microsFunction) :
-        _numTasks(0),
-        _microsFunction(microsFunction)
+    // Constructor
+    Scheduler::Scheduler() :
+        _numTasks(0)
     {
         
+    }
+
+    void Scheduler::setTimingFunction(std::function<unsigned long()> microsFunction)
+    {
+        _microsFunction = microsFunction;
     }
 
     // Add a task to the scheduler's list
@@ -150,8 +154,28 @@ namespace HT_SCHED
         idleUtilization         = (float) _idleExecTimer        / totalTime;
         schedulerUtilization    = (float)_schedulerExecTimer    / totalTime;
 
+        // reset counters
+        _intervalExecTimer = 0;
+        _idleExecTimer = 0;
+        _schedulerExecTimer = 0;
+
         // std::cout << "p_util: " << periodicUtilization << ", i_util: " << idleUtilization << ", s_util:" << schedulerUtilization << "\n";
 
         return true;
+    }
+
+    const float& Scheduler::getPeriodicUtilization()
+    {
+        return periodicUtilization;
+    }
+
+    const float& Scheduler::getIdleUtilization()
+    {
+        return idleUtilization;
+    }
+
+    const float& Scheduler::getSchedulerUtilization()
+    {
+        return schedulerUtilization;
     }
 }
