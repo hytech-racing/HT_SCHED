@@ -58,20 +58,6 @@ namespace HT_TASK
         Task(
             std::function<bool(const unsigned long&, const TaskInfo&)> setup,
             std::function<bool(const unsigned long&, const TaskInfo&)> loop,
-            unsigned long executionIntervalMicros
-        ) :
-        _taskInfo(TaskInfo()),
-        _setup(setup),
-        _loop(loop)
-        {
-            _taskInfo.executionIntervalMicros = executionIntervalMicros;
-            _taskInfo.isIntervalFunction = true;
-        };
-
-        // Interval task constructor with priority
-        Task(
-            std::function<bool(const unsigned long&, const TaskInfo&)> setup,
-            std::function<bool(const unsigned long&, const TaskInfo&)> loop,
             unsigned long executionIntervalMicros,
             int priority
         ) :
@@ -82,18 +68,6 @@ namespace HT_TASK
             _taskInfo.executionIntervalMicros = executionIntervalMicros;
             _taskInfo.isIntervalFunction = true;
             _taskInfo.priority = priority;
-        };
-
-        // Idle task constructor
-        Task(
-            std::function<bool(const unsigned long&, const TaskInfo&)> setup,
-            std::function<bool(const unsigned long&, const TaskInfo&)> loop
-        ) :
-        _taskInfo(TaskInfo()),
-        _setup(setup),
-        _loop(loop)
-        {
-            _taskInfo.isIntervalFunction = false;
         };
 
         // Idle task constructor with priority
@@ -111,7 +85,7 @@ namespace HT_TASK
         };
 
         // default constructor
-        Task() : Task(DUMMY_FUNCTION, DUMMY_FUNCTION) {};
+        Task() : Task(DUMMY_FUNCTION, DUMMY_FUNCTION, 0) {};
     };
 } // namespace HT_TASK
 

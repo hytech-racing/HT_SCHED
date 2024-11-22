@@ -38,7 +38,7 @@ HT_SCHED::Scheduler scheduler = HT_SCHED::Scheduler(stdMicros);
 
 HT_TASK::Task task1 = HT_TASK::Task(HT_TASK::DUMMY_FUNCTION, task1F, 20000UL, 2); // 20000us is 50hz
 HT_TASK::Task task2 = HT_TASK::Task(HT_TASK::DUMMY_FUNCTION, task2F, 20000UL, 1); // task2 is higher priority
-HT_TASK::Task task3 = HT_TASK::Task(HT_TASK::DUMMY_FUNCTION, task3F); // task3 is an idle task
+HT_TASK::Task task3 = HT_TASK::Task(HT_TASK::DUMMY_FUNCTION, task3F, 0); // task3 is an idle task
 
 HT_TASK::Task schedMon = HT_TASK::Task(
     std::bind(&HT_SCHED::Scheduler::initSchedMon, std::ref(scheduler), std::placeholders::_1, std::placeholders::_2), 
