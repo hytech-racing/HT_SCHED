@@ -21,7 +21,7 @@ namespace HT_TASK
         unsigned long   executionIntervalMicros;
         unsigned long   lastExecutionMicros;
         unsigned long   nextExecutionMicros;
-        unsigned long   maxExecutionDurationMicros;
+        unsigned long   filteredExecutionDurationMicros;
         unsigned long   executions;
         unsigned int    id;
         // use priority to enforce ordering when multiple tasks execute on the same scheduling cycle
@@ -33,7 +33,7 @@ namespace HT_TASK
             executionIntervalMicros(1),
             lastExecutionMicros(0),
             nextExecutionMicros(0),
-            maxExecutionDurationMicros(0),
+            filteredExecutionDurationMicros(0),
             executions(0),
             id(0),
             priority(0),

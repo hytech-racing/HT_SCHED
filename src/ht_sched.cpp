@@ -100,7 +100,7 @@ namespace HT_SCHED
                             // for interval functions, see if nextExecutionMicros has passed
                             ((task->_taskInfo.isIntervalFunction == true) && (nowMicros >= task->_taskInfo.nextExecutionMicros))
                             // for idle functions, see if time might conflict with interval function
-                            || ((task->_taskInfo.isIntervalFunction == false) && (task->_taskInfo.maxExecutionDurationMicros + _microsFunction() < _timeOfNextExec))
+                            || ((task->_taskInfo.isIntervalFunction == false) && (task->_taskInfo.filteredExecutionDurationMicros + _microsFunction() < _timeOfNextExec))
                         )
                         {
                             // run its loop function
@@ -112,7 +112,7 @@ namespace HT_SCHED
 
                             task->_taskInfo.nextExecutionMicros += task->_taskInfo.executionIntervalMicros;
                             task->_taskInfo.lastExecutionMicros = _microsFunction();
-                            task->_taskInfo.maxExecutionDurationMicros = std::max(task->_taskInfo.maxExecutionDurationMicros, dt);
+                            task->_taskInfo.filteredExecutionDurationMicros = (dt * 0.5) + (task->_taskInfo.filteredExecutionDurationMicros * 0.5);
                             task->_taskInfo.executions++;
 
                             // track execution time
@@ -146,9 +146,9 @@ namespace HT_SCHED
     bool Scheduler::schedMon(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo)
     {
         unsigned long totalTime = _intervalExecTimer + _idleExecTimer + _schedulerExecTimer;
-        periodicUtilization = _intervalExecTimer / totalTime;
-        idleUtilization = _idleExecTimer / totalTime;
-        schedulerUtilization = _schedulerExecTimer / totalTime;
+        periodicUtilization     = (float) _intervalExecTimer    / totalTime;
+        idleUtilization         = (float) _idleExecTimer        / totalTime;
+        schedulerUtilization    = (float)_schedulerExecTimer    / totalTime;
 
         // std::cout << "p_util: " << periodicUtilization << ", i_util: " << idleUtilization << ", s_util:" << schedulerUtilization << "\n";
 
