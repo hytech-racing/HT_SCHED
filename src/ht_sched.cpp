@@ -1,4 +1,5 @@
 #include "ht_sched.hpp"
+#include <algorithm>
 // #include <iostream>
 
 namespace HT_SCHED
