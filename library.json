@@ -7,5 +7,8 @@
         "name": "Mikhail Allen",
         "email": "mik@gatech.edu"
       }
-    ]
-  }
+    ],
+    "build": {
+      "includeDir": "inc"
+    }
+}
