@@ -5,7 +5,7 @@
 #include "ht_task.hpp"
 #include <climits>
 
-#define HT_SCHED_MAX_TASKS 10
+#define HT_SCHED_MAX_TASKS 256
 
 namespace HT_SCHED
 {
