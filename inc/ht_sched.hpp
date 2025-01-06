@@ -21,7 +21,7 @@ namespace HT_SCHED
         }
 
         void setTimingFunction(std::function<unsigned long()>);
-        bool schedule(HT_TASK::Task& task);
+        bool schedule(const HT_TASK::Task& task);
         void run();
 
         // init function for SchedMon task
