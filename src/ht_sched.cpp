@@ -20,7 +20,7 @@ namespace HT_SCHED
     // Give the task an ID
     // Return true upon success
     // Return false when the scheduling queue is full. (increase HT_SCHED_MAX_TASKS if this happens)
-    bool Scheduler::schedule(HT_TASK::Task& task)
+    bool Scheduler::schedule(const HT_TASK::Task& task)
     {
         if (_numTasks < HT_SCHED_MAX_TASKS)
         {
