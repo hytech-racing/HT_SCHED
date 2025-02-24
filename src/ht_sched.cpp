@@ -1,6 +1,6 @@
 #include "ht_sched.hpp"
 #include <algorithm>
-#include <stdio.h>
+#include <iostream>
 // #include <iostream>
 
 namespace HT_SCHED
@@ -68,8 +68,8 @@ namespace HT_SCHED
     void Scheduler::run()
     {
         // get the time
-        unsigned long nowMicros = _microsFunction();
-        unsigned long cycleExecTimer = 0;
+        uint32_t nowMicros = (uint32_t) _microsFunction();
+        uint32_t cycleExecTimer = 0;
         // used to find the timing of the nearest interval function
         _timeOfNextExec = ULONG_MAX;
 
@@ -110,18 +110,13 @@ namespace HT_SCHED
                         )
                         {
                             // run its loop function
-                            unsigned long dt = _microsFunction();
+                            uint32_t dt = (uint32_t) _microsFunction();
                             bool result = task->_loop(nowMicros, task->_taskInfo);
                             dt = _microsFunction() - dt;
                             if (!result)
                                 task->_taskInfo.state = HT_TASK::TaskState::KILLED;
 
                             task->_taskInfo.nextExecutionMicros += task->_taskInfo.executionIntervalMicros;
-                            if (task->_taskInfo.nextExecutionMicros < task->_taskInfo.lastExecutionMicros) {
-                                std::cout << "looped!";
-                            } else {
-                                std::cout << "did not loop";
-                            }
                             task->_taskInfo.lastExecutionMicros = _microsFunction();
                             task->_taskInfo.filteredExecutionDurationMicros = (dt * 0.5) + (task->_taskInfo.filteredExecutionDurationMicros * 0.5);
                             task->_taskInfo.executions++;

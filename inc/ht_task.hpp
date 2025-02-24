@@ -2,6 +2,7 @@
 #define __HT_TASK__
 
 #include <functional>
+#include <stdint.h>
 
 namespace HT_TASK
 {    
@@ -18,11 +19,11 @@ namespace HT_TASK
         public:
 
         TaskState       state;
-        unsigned long   executionIntervalMicros;
-        unsigned long   lastExecutionMicros;
-        unsigned long   nextExecutionMicros;
-        unsigned long   filteredExecutionDurationMicros;
-        unsigned long   executions;
+        uint32_t        executionIntervalMicros;
+        uint32_t        lastExecutionMicros;
+        uint32_t        nextExecutionMicros;
+        uint32_t        filteredExecutionDurationMicros;
+        uint32_t        executions;
         unsigned int    id;
         // use priority to enforce ordering when multiple tasks execute on the same scheduling cycle
         unsigned int    priority;   // 0 is highest priority.
