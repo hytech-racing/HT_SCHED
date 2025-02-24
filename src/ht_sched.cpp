@@ -1,5 +1,6 @@
 #include "ht_sched.hpp"
 #include <algorithm>
+#include <stdio.h>
 // #include <iostream>
 
 namespace HT_SCHED
@@ -116,6 +117,11 @@ namespace HT_SCHED
                                 task->_taskInfo.state = HT_TASK::TaskState::KILLED;
 
                             task->_taskInfo.nextExecutionMicros += task->_taskInfo.executionIntervalMicros;
+                            if (task->_taskInfo.nextExecutionMicros < task->_taskInfo.lastExecutionMicros) {
+                                std::cout << "looped!";
+                            } else {
+                                std::cout << "did not loop";
+                            }
                             task->_taskInfo.lastExecutionMicros = _microsFunction();
                             task->_taskInfo.filteredExecutionDurationMicros = (dt * 0.5) + (task->_taskInfo.filteredExecutionDurationMicros * 0.5);
                             task->_taskInfo.executions++;
