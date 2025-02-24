@@ -20,14 +20,14 @@ namespace HT_SCHED
             return instance;
         }
 
-        void setTimingFunction(std::function<unsigned long()>);
+        void setTimingFunction(std::function<uint32_t()>);
         bool schedule(HT_TASK::Task& task);
         void run();
 
         // init function for SchedMon task
-        bool initSchedMon(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
+        bool initSchedMon(const uint32_t& sysMicros, const HT_TASK::TaskInfo& taskInfo);
         // loop for SchedMon task
-        bool schedMon(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
+        bool schedMon(const uint32_t& sysMicros, const HT_TASK::TaskInfo& taskInfo);
         const float& getPeriodicUtilization();
         const float& getIdleUtilization();
         const float& getSchedulerUtilization();
@@ -38,7 +38,7 @@ namespace HT_SCHED
 
         HT_TASK::Task*                  _taskQueue[HT_SCHED_MAX_TASKS]; // ordered list of task object pointers
         int                             _numTasks;
-        std::function<unsigned long()>  _microsFunction;
+        std::function<uint32_t()>       _microsFunction;
         uint32_t                        _timeOfNextExec;        // time at which the next scheduled function must trigger
         uint32_t                        _intervalExecTimer;     // accumulation of time spent executing scheduled tasks
         uint32_t                        _idleExecTimer;         // accumulation of time spent executing idle tasks

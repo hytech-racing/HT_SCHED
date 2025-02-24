@@ -12,7 +12,7 @@ namespace HT_SCHED
         
     }
 
-    void Scheduler::setTimingFunction(std::function<unsigned long()> microsFunction)
+    void Scheduler::setTimingFunction(std::function<uint32_t()> microsFunction)
     {
         _microsFunction = microsFunction;
     }
@@ -140,7 +140,7 @@ namespace HT_SCHED
         _schedulerExecTimer += _microsFunction() - nowMicros - cycleExecTimer;
     }
 
-    bool Scheduler::initSchedMon(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo)
+    bool Scheduler::initSchedMon(const uint32_t& sysMicros, const HT_TASK::TaskInfo& taskInfo)
     {
         _intervalExecTimer = 0;
         _idleExecTimer = 0;
@@ -149,9 +149,9 @@ namespace HT_SCHED
         return true;
     }
     
-    bool Scheduler::schedMon(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo)
+    bool Scheduler::schedMon(const uint32_t& sysMicros, const HT_TASK::TaskInfo& taskInfo)
     {
-        unsigned long totalTime = _intervalExecTimer + _idleExecTimer + _schedulerExecTimer;
+        uint32_t totalTime = _intervalExecTimer + _idleExecTimer + _schedulerExecTimer;
         periodicUtilization     = (float) _intervalExecTimer    / totalTime;
         idleUtilization         = (float) _idleExecTimer        / totalTime;
         schedulerUtilization    = (float)_schedulerExecTimer    / totalTime;

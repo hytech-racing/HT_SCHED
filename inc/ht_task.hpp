@@ -42,7 +42,7 @@ namespace HT_TASK
     };
 
     // Use this to declare a task without a setup or loop
-    inline bool DUMMY_FUNCTION(const unsigned long& timeMicros, const TaskInfo& taskInfo)
+    inline bool DUMMY_FUNCTION(const uint32_t& timeMicros, const TaskInfo& taskInfo)
     {
         return true;
     }
@@ -52,15 +52,15 @@ namespace HT_TASK
         public:  
              
         TaskInfo _taskInfo;
-        std::function<bool(const unsigned long&, const TaskInfo&)> _setup;
-        std::function<bool(const unsigned long&, const TaskInfo&)> _loop;
+        std::function<bool(const uint32_t&, const TaskInfo&)> _setup;
+        std::function<bool(const uint32_t&, const TaskInfo&)> _loop;
 
         // Interval task constructor
         Task(
-            std::function<bool(const unsigned long&, const TaskInfo&)> setup,
-            std::function<bool(const unsigned long&, const TaskInfo&)> loop,
+            std::function<bool(const uint32_t&, const TaskInfo&)> setup,
+            std::function<bool(const uint32_t&, const TaskInfo&)> loop,
             int priority,
-            unsigned long executionIntervalMicros
+            uint32_t executionIntervalMicros
         ) :
         _taskInfo(TaskInfo()),
         _setup(setup),
@@ -73,8 +73,8 @@ namespace HT_TASK
 
         // Idle task constructor with priority
         Task(
-            std::function<bool(const unsigned long&, const TaskInfo&)> setup,
-            std::function<bool(const unsigned long&, const TaskInfo&)> loop,
+            std::function<bool(const uint32_t&, const TaskInfo&)> setup,
+            std::function<bool(const uint32_t&, const TaskInfo&)> loop,
             int priority
         ) :
         _taskInfo(TaskInfo()),

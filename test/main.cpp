@@ -8,26 +8,26 @@
 
 auto start_time = std::chrono::high_resolution_clock::now();
 
-unsigned long stdMicros()
+uint32_t stdMicros()
 {
     auto now = std::chrono::high_resolution_clock::now();
     auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(now - start_time).count();
-    return static_cast<unsigned long>(elapsed);
+    return static_cast<uint32_t>(elapsed);
 }
 
-bool task1F(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo)
+bool task1F(const uint32_t& sysMicros, const HT_TASK::TaskInfo& taskInfo)
 {
     std::cout << "task1 exec " << taskInfo.executions << "\n";
     return true;
 }
 
-bool task2F(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo)
+bool task2F(const uint32_t& sysMicros, const HT_TASK::TaskInfo& taskInfo)
 {
     std::cout << "task2 exec " << taskInfo.executions << "\n";
     return true;
 }
 
-bool task3F(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo)
+bool task3F(const uint32_t& sysMicros, const HT_TASK::TaskInfo& taskInfo)
 {
     // std::cout << "task3 filtered duration " << taskInfo.filteredExecutionDurationMicros << "\n";
     // std::cout << "task3 last execution " << taskInfo.lastExecutionMicros << "\n";
