@@ -22,46 +22,44 @@ namespace HT_SCHED
     // Return false when the scheduling queue is full. (increase HT_SCHED_MAX_TASKS if this happens)
     bool Scheduler::schedule(HT_TASK::Task& task)
     {
-        if (_numTasks < HT_SCHED_MAX_TASKS)
-        {
-            // place the task at the back of the queue (last execution in a scheduling cycle)
-            _taskQueue[_numTasks] = &task;
-            
-            // start from the back (lowest priority) and shift forward until priority is correct
-            // idle tasks are always lower priority than interval tasks
-            // promote if either:
-            // 1. tasks are the same type and priority of shifting task is higher
-            // 2. shifting task is interval ask and compared task is idle
-            int i = _numTasks;
-            while (
-                (i > 0)
-                && (
-                    // check tasks are the same type and priority of shifting task is higher
-                    (
-                        (task._taskInfo.priority < _taskQueue[i-1]->_taskInfo.priority) 
-                        && (task._taskInfo.isIntervalFunction == _taskQueue[i-1]->_taskInfo.isIntervalFunction)
-                    )
-                    // check shifting task is interval ask and compared task is idle
-                    || (
-                        (_taskQueue[i-1]->_taskInfo.isIntervalFunction == false)
-                        && (task._taskInfo.isIntervalFunction == true)
-                    )
-                )
-            )
-            {
-                HT_TASK::Task* temp = _taskQueue[i];
-                _taskQueue[i] = _taskQueue[i-1];
-                _taskQueue[i-1] = temp;
-            }
-
-            task._taskInfo.id = ++_numTasks;
-
-            return true;
-        }
-        else
+        if (!(_numTasks < HT_SCHED_MAX_TASKS))
         {
             return false;
         }
+        // place the task at the back of the queue (last execution in a scheduling cycle)
+        _taskQueue[_numTasks] = &task;
+        
+        // start from the back (lowest priority) and shift forward until priority is correct
+        // idle tasks are always lower priority than interval tasks
+        // promote if either:
+        // 1. tasks are the same type and priority of shifting task is higher
+        // 2. shifting task is interval ask and compared task is idle
+        int i = _numTasks;
+        while (
+            (i > 0)
+            && (
+                // check tasks are the same type and priority of shifting task is higher
+                (
+                    (task._taskInfo.priority < _taskQueue[i-1]->_taskInfo.priority) 
+                    && (task._taskInfo.isIntervalFunction == _taskQueue[i-1]->_taskInfo.isIntervalFunction)
+                )
+                // check shifting task is interval ask and compared task is idle
+                || (
+                    (_taskQueue[i-1]->_taskInfo.isIntervalFunction == false)
+                    && (task._taskInfo.isIntervalFunction == true)
+                )
+            )
+        )
+        {
+            HT_TASK::Task* temp = _taskQueue[i];
+            _taskQueue[i] = _taskQueue[i-1];
+            _taskQueue[i-1] = temp;
+        }
+
+        task._taskInfo.id = ++_numTasks;
+
+        return true;
+
     }
 
     void Scheduler::run()
@@ -83,8 +81,8 @@ namespace HT_SCHED
                         // enable the task
                         // run its setup function
                         // check if the task wants to exit
-                        bool result = task->_setup(nowMicros, task->_taskInfo);
-                        if (!result)
+                        HT_TASK::TaskResponse result = task->_setup(nowMicros, task->_taskInfo);
+                        if (result == HT_TASK::TaskResponse::EXIT)
                             task->_taskInfo.state = HT_TASK::TaskState::KILLED;
                         else
                             task->_taskInfo.state = HT_TASK::TaskState::RUNNING;
@@ -110,9 +108,9 @@ namespace HT_SCHED
                         {
                             // run its loop function
                             unsigned long dt = _microsFunction();
-                            bool result = task->_loop(nowMicros, task->_taskInfo);
+                            HT_TASK::TaskResponse result = task->_loop(nowMicros, task->_taskInfo);
                             dt = _microsFunction() - dt;
-                            if (!result)
+                            if (result == HT_TASK::EXIT)
                                 task->_taskInfo.state = HT_TASK::TaskState::KILLED;
 
                             task->_taskInfo.nextExecutionMicros += task->_taskInfo.executionIntervalMicros;
@@ -139,16 +137,16 @@ namespace HT_SCHED
         _schedulerExecTimer += _microsFunction() - nowMicros - cycleExecTimer;
     }
 
-    bool Scheduler::initSchedMon(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo)
+    HT_TASK::TaskResponse Scheduler::initSchedMon(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo)
     {
         _intervalExecTimer = 0;
         _idleExecTimer = 0;
         _schedulerExecTimer = 0;
 
-        return true;
+        return HT_TASK::TaskResponse::YIELD;
     }
     
-    bool Scheduler::schedMon(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo)
+    HT_TASK::TaskResponse Scheduler::schedMon(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo)
     {
         unsigned long totalTime = _intervalExecTimer + _idleExecTimer + _schedulerExecTimer;
         periodicUtilization     = (float) _intervalExecTimer    / totalTime;
@@ -162,7 +160,7 @@ namespace HT_SCHED
 
         // std::cout << "p_util: " << periodicUtilization << ", i_util: " << idleUtilization << ", s_util:" << schedulerUtilization << "\n";
 
-        return true;
+        return HT_TASK::TaskResponse::YIELD;
     }
 
     const float& Scheduler::getPeriodicUtilization()

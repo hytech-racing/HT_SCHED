@@ -25,9 +25,9 @@ namespace HT_SCHED
         void run();
 
         // init function for SchedMon task
-        bool initSchedMon(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
+        HT_TASK::TaskResponse initSchedMon(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
         // loop for SchedMon task
-        bool schedMon(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
+        HT_TASK::TaskResponse schedMon(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
         const float& getPeriodicUtilization();
         const float& getIdleUtilization();
         const float& getSchedulerUtilization();

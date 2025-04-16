@@ -13,6 +13,13 @@ namespace HT_TASK
         NumStates
     };
 
+    enum TaskResponse
+    {
+        YIELD           = 0, // If the task should run again (not permanently end)
+        EXIT            = 1, // If the task should permanently end
+        NumStates
+    };
+
     class TaskInfo
     {
         public:
@@ -41,9 +48,9 @@ namespace HT_TASK
     };
 
     // Use this to declare a task without a setup or loop
-    inline bool DUMMY_FUNCTION(const unsigned long& timeMicros, const TaskInfo& taskInfo)
+    inline TaskResponse DUMMY_FUNCTION(const unsigned long& timeMicros, const TaskInfo& taskInfo)
     {
-        return true;
+        return TaskResponse::YIELD;
     }
 
     class Task
@@ -51,13 +58,13 @@ namespace HT_TASK
         public:  
              
         TaskInfo _taskInfo;
-        std::function<bool(const unsigned long&, const TaskInfo&)> _setup;
-        std::function<bool(const unsigned long&, const TaskInfo&)> _loop;
+        std::function<TaskResponse(const unsigned long&, const TaskInfo&)> _setup;
+        std::function<TaskResponse(const unsigned long&, const TaskInfo&)> _loop;
 
         // Interval task constructor
         Task(
-            std::function<bool(const unsigned long&, const TaskInfo&)> setup,
-            std::function<bool(const unsigned long&, const TaskInfo&)> loop,
+            std::function<TaskResponse(const unsigned long&, const TaskInfo&)> setup,
+            std::function<TaskResponse(const unsigned long&, const TaskInfo&)> loop,
             int priority,
             unsigned long executionIntervalMicros
         ) :
@@ -72,8 +79,8 @@ namespace HT_TASK
 
         // Idle task constructor with priority
         Task(
-            std::function<bool(const unsigned long&, const TaskInfo&)> setup,
-            std::function<bool(const unsigned long&, const TaskInfo&)> loop,
+            std::function<TaskResponse(const unsigned long&, const TaskInfo&)> setup,
+            std::function<TaskResponse(const unsigned long&, const TaskInfo&)> loop,
             int priority
         ) :
         _taskInfo(TaskInfo()),
