@@ -17,7 +17,6 @@ namespace HT_TASK
     {
         YIELD           = 0, // If the task should run again (not permanently end)
         EXIT            = 1, // If the task should permanently end
-        NumStates
     };
 
     class TaskInfo
