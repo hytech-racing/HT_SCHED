@@ -56,7 +56,7 @@ namespace HT_SCHED
             }
 
             task._taskInfo.id = ++_numTasks;
-
+            task._taskInfo.nextExecutionMicros = (uint32_t) _microsFunction();
             return true;
         }
         else
