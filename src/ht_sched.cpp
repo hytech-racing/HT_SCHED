@@ -104,7 +104,7 @@ namespace HT_SCHED
                         // check if it's time to execute
                         if (
                             // for interval functions, see if nextExecutionMicros has passed
-                            ((task->_taskInfo.isIntervalFunction == true) && (nowMicros - task->_taskInfo.nextExecutionMicros < task->_taskInfo.executionIntervalMicros))
+                            ((task->_taskInfo.isIntervalFunction == true) && (task->_taskInfo.nextExecutionMicros - nowMicros >= task->_taskInfo.executionIntervalMicros))
                             // for idle functions, see if time might conflict with interval function
                             || ((task->_taskInfo.isIntervalFunction == false) && (task->_taskInfo.filteredExecutionDurationMicros + _microsFunction() < _timeOfNextExec))
                         )
