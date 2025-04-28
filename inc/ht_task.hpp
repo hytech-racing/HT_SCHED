@@ -14,6 +14,12 @@ namespace HT_TASK
         NumStates
     };
 
+    enum TaskResponse
+    {
+        YIELD           = 0, // If the task should run again (not permanently end)
+        EXIT            = 1, // If the task should permanently end
+    };
+
     class TaskInfo
     {
         public:
@@ -42,9 +48,9 @@ namespace HT_TASK
     };
 
     // Use this to declare a task without a setup or loop
-    inline bool DUMMY_FUNCTION(const uint32_t& timeMicros, const TaskInfo& taskInfo)
+    inline TaskResponse DUMMY_FUNCTION(const uint32_t& timeMicros, const TaskInfo& taskInfo)
     {
-        return true;
+        return TaskResponse::YIELD;
     }
 
     class Task
@@ -52,13 +58,13 @@ namespace HT_TASK
         public:  
              
         TaskInfo _taskInfo;
-        std::function<bool(const uint32_t&, const TaskInfo&)> _setup;
-        std::function<bool(const uint32_t&, const TaskInfo&)> _loop;
+        std::function<TaskResponse(const uint32_t&, const TaskInfo&)> _setup;
+        std::function<TaskResponse(const uint32_t&, const TaskInfo&)> _loop;
 
         // Interval task constructor
         Task(
-            std::function<bool(const uint32_t&, const TaskInfo&)> setup,
-            std::function<bool(const uint32_t&, const TaskInfo&)> loop,
+            std::function<TaskResponse(const uint32_t&, const TaskInfo&)> setup,
+            std::function<TaskResponse(const uint32_t&, const TaskInfo&)> loop,
             int priority,
             uint32_t executionIntervalMicros
         ) :
@@ -73,8 +79,8 @@ namespace HT_TASK
 
         // Idle task constructor with priority
         Task(
-            std::function<bool(const uint32_t&, const TaskInfo&)> setup,
-            std::function<bool(const uint32_t&, const TaskInfo&)> loop,
+            std::function<TaskResponse(const uint32_t&, const TaskInfo&)> setup,
+            std::function<TaskResponse(const uint32_t&, const TaskInfo&)> loop,
             int priority
         ) :
         _taskInfo(TaskInfo()),

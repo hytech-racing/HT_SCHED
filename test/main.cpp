@@ -15,23 +15,23 @@ uint32_t stdMicros()
     return static_cast<uint32_t>(elapsed);
 }
 
-bool task1F(const uint32_t& sysMicros, const HT_TASK::TaskInfo& taskInfo)
+HT_TASK::TaskResponse task1F(const uint32_t& sysMicros, const HT_TASK::TaskInfo& taskInfo)
 {
     std::cout << "task1 exec " << taskInfo.executions << "\n";
-    return true;
+    return HT_TASK::TaskResponse::YIELD;
 }
 
-bool task2F(const uint32_t& sysMicros, const HT_TASK::TaskInfo& taskInfo)
+HT_TASK::TaskResponse task2F(const uint32_t& sysMicros, const HT_TASK::TaskInfo& taskInfo)
 {
     std::cout << "task2 exec " << taskInfo.executions << "\n";
-    return true;
+    return HT_TASK::TaskResponse::YIELD;
 }
 
-bool task3F(const uint32_t& sysMicros, const HT_TASK::TaskInfo& taskInfo)
+HT_TASK::TaskResponse task3F(const uint32_t& sysMicros, const HT_TASK::TaskInfo& taskInfo)
 {
     // std::cout << "task3 filtered duration " << taskInfo.filteredExecutionDurationMicros << "\n";
     // std::cout << "task3 last execution " << taskInfo.lastExecutionMicros << "\n";
-    return true;
+    return HT_TASK::TaskResponse::YIELD;
 }
 
 HT_SCHED::Scheduler& scheduler = HT_SCHED::Scheduler::getInstance();
