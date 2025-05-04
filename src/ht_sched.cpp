@@ -1,6 +1,5 @@
 #include "ht_sched.hpp"
 #include <algorithm>
-// #include <iostream>
 
 namespace HT_SCHED
 {
@@ -11,7 +10,7 @@ namespace HT_SCHED
         
     }
 
-    void Scheduler::setTimingFunction(std::function<unsigned long()> microsFunction)
+    void Scheduler::setTimingFunction(std::function<uint32_t()> microsFunction)
     {
         _microsFunction = microsFunction;
     }
@@ -65,8 +64,8 @@ namespace HT_SCHED
     void Scheduler::run()
     {
         // get the time
-        unsigned long nowMicros = _microsFunction();
-        unsigned long cycleExecTimer = 0;
+        uint32_t nowMicros = (uint32_t) _microsFunction();
+        uint32_t cycleExecTimer = 0;
         // used to find the timing of the nearest interval function
         _timeOfNextExec = ULONG_MAX;
 
@@ -101,13 +100,13 @@ namespace HT_SCHED
                         // check if it's time to execute
                         if (
                             // for interval functions, see if nextExecutionMicros has passed
-                            ((task->_taskInfo.isIntervalFunction == true) && (nowMicros >= task->_taskInfo.nextExecutionMicros))
+                            ((task->_taskInfo.isIntervalFunction == true) && (task->_taskInfo.nextExecutionMicros - nowMicros >= task->_taskInfo.executionIntervalMicros))
                             // for idle functions, see if time might conflict with interval function
                             || ((task->_taskInfo.isIntervalFunction == false) && (task->_taskInfo.filteredExecutionDurationMicros + _microsFunction() < _timeOfNextExec))
                         )
                         {
                             // run its loop function
-                            unsigned long dt = _microsFunction();
+                            uint32_t dt = (uint32_t) _microsFunction();
                             HT_TASK::TaskResponse result = task->_loop(nowMicros, task->_taskInfo);
                             dt = _microsFunction() - dt;
                             if (result == HT_TASK::EXIT)
@@ -137,7 +136,7 @@ namespace HT_SCHED
         _schedulerExecTimer += _microsFunction() - nowMicros - cycleExecTimer;
     }
 
-    HT_TASK::TaskResponse Scheduler::initSchedMon(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo)
+    HT_TASK::TaskResponse Scheduler::initSchedMon(const uint32_t& sysMicros, const HT_TASK::TaskInfo& taskInfo)
     {
         _intervalExecTimer = 0;
         _idleExecTimer = 0;
@@ -146,9 +145,9 @@ namespace HT_SCHED
         return HT_TASK::TaskResponse::YIELD;
     }
     
-    HT_TASK::TaskResponse Scheduler::schedMon(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo)
+    HT_TASK::TaskResponse Scheduler::schedMon(const uint32_t& sysMicros, const HT_TASK::TaskInfo& taskInfo)
     {
-        unsigned long totalTime = _intervalExecTimer + _idleExecTimer + _schedulerExecTimer;
+        uint32_t totalTime = _intervalExecTimer + _idleExecTimer + _schedulerExecTimer;
         periodicUtilization     = (float) _intervalExecTimer    / totalTime;
         idleUtilization         = (float) _idleExecTimer        / totalTime;
         schedulerUtilization    = (float)_schedulerExecTimer    / totalTime;
